@@ -44,6 +44,8 @@ dependencies {
 	implementation("com.googlecode.json-simple:json-simple:1.1.1")
 
 	implementation("redis.clients:jedis:5.1.2")
+	implementation("mysql:mysql-connector-java:8.0.33")
+
 
 }
 
