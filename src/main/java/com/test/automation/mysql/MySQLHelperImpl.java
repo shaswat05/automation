@@ -1,5 +1,6 @@
 package com.test.automation.mysql;
 
+import com.test.automation.allure.AllureReportUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -21,10 +22,10 @@ public class MySQLHelperImpl implements MySQLHelper {
      */
     @Override
     public List<Map<String, Object>> select(String sql) {
-        log("[Select Query] " + sql);
+        log(sql, "[Select Query]");
         try {
             List<Map<String, Object>> responseMap = map(getStatement().executeQuery(sql));
-            log("[Select Query Response] " + responseMap);
+            log(responseMap, "[Select Query Response]");
             return responseMap;
         } catch (SQLException e) {
             throw new SQLRuntimeException(e);
@@ -40,7 +41,7 @@ public class MySQLHelperImpl implements MySQLHelper {
      */
     @Override
     public int execute(String sql) {
-        log("[Execute Query] " + sql);
+        log(sql, "[Execute Query]");
         try {
             return getStatement().executeUpdate(sql);
         } catch (SQLException e) {
@@ -101,8 +102,10 @@ public class MySQLHelperImpl implements MySQLHelper {
         return results;
     }
 
-    private void log(String str) {
-        log.info("[MySQL]" + str);
+    private void log(Object sql, Object logTag) {
+        String lt = "[MySQL][" + "dbName:automation" + "]" + logTag + " ";
+        log.info(lt + sql);
+        AllureReportUtils.addAttachment(lt, sql.toString());
     }
 
 }

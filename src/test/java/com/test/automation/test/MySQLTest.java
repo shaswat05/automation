@@ -1,5 +1,6 @@
 package com.test.automation.test;
 
+import com.test.automation.allure.AllureReportUtils;
 import com.test.automation.mysql.MySQLHelper;
 import com.test.automation.mysql.MySQLHelperImpl;
 import org.testng.annotations.Test;
@@ -13,6 +14,7 @@ public class MySQLTest {
 
     @Test
     public void f() {
+        AllureReportUtils.updateTestMethodNameAndDescription("MySQL test with AllureReportUtils");
         mySQLHelper.select("SELECT * FROM user");
         mySQLHelper.execute("DELETE FROM user WHERE name='Alok'");
         mySQLHelper.select("SELECT * FROM user");
