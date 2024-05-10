@@ -2,6 +2,7 @@ plugins {
 	java
 	id("org.springframework.boot") version "3.2.5"
 	id("io.spring.dependency-management") version "1.1.4"
+	id("io.qameta.allure") version "2.11.2"
 }
 
 group = "com.test"
@@ -46,9 +47,20 @@ dependencies {
 	implementation("redis.clients:jedis:5.1.2")
 	implementation("mysql:mysql-connector-java:8.0.33")
 
+	implementation("io.qameta.allure:allure-testng:2.27.0")
 
 }
 
 tasks.withType<Test> {
 	useTestNG()
+}
+
+allure {
+	adapter {
+		frameworks {
+			junit4.autoconfigureListeners.set(false)
+			junit5.autoconfigureListeners.set(false)
+			testng.autoconfigureListeners.set(true)
+		}
+	}
 }
