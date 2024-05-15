@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Rest API Test Suite" parallel="methods" thread-count="5">
+    <test name="Rest Assured" verbose="2" preserve-order="true">
+        <classes>
+            <class name="com.test.automation.test.RATest">
+                <methods>
+                    <include name="listUsersTest"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>
