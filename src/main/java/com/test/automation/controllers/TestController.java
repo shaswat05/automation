@@ -4,6 +4,7 @@ import com.test.automation.pojo.controller.RunTestXmlSuitePojo;
 import com.test.automation.pojo.testng.TestSuite;
 import com.test.automation.services.testNg.TestNGService;
 import com.test.automation.utils.JsonUtils;
+import com.test.automation.utils.RandomNumberGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 public class TestController {
@@ -23,19 +25,24 @@ public class TestController {
     @Autowired
     TestNGService service;
 
-
-    @PostMapping("/suite/run")
-    public String runTestSuite(@RequestBody TestSuite suite) {
+    @PostMapping("/custom/suite/run")
+    public String runCustomTestSuite(@RequestBody TestSuite suite) throws ExecutionException, InterruptedException {
         log.info("Request received: " + JsonUtils.pojoToJsonString(suite));
-        service.runTestNgXML(suite);
-        return JsonUtils.mapToJson(Map.of("status", "success"));
+        String testId = RandomNumberGenerator.getTestId();
+        service.runTestNgXML(suite, testId);
+        String response = JsonUtils.mapToJson(Map.of("test_id", testId, "status", "success"));
+        log.info("Response: {}", response);
+        return response;
     }
 
     @PostMapping("/xml/suite/run")
-    public String runTestXmlSuite(@RequestBody RunTestXmlSuitePojo runTestXmlSuitePojo) {
+    public String runTestXmlSuite(@RequestBody RunTestXmlSuitePojo runTestXmlSuitePojo) throws ExecutionException, InterruptedException {
         log.info("Request received: " + JsonUtils.pojoToJsonString(runTestXmlSuitePojo));
-        service.runTestNgXML(runTestXmlSuitePojo);
-        return JsonUtils.mapToJson(Map.of("status", "success"));
+        String testId = RandomNumberGenerator.getTestId();
+        service.runTestNgXML(runTestXmlSuitePojo, testId);
+        String response = JsonUtils.mapToJson(Map.of("test_id", testId, "status", "success"));
+        log.info("Response: {}", response);
+        return response;
     }
 
     @GetMapping("/xml/suite")
