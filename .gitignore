@@ -40,4 +40,5 @@ allure-results/
 
 # testng
 test-output/
+logging.log*
 

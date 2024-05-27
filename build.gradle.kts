@@ -30,6 +30,7 @@ dependencies {
     implementation("io.rest-assured:rest-assured:5.4.0")
     implementation("org.seleniumhq.selenium:selenium-java:4.20.0")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.15.4")
+    implementation("com.jayway.jsonpath:json-path:2.9.0")
 
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")

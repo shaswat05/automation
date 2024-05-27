@@ -1,15 +1,11 @@
 package com.test.automation.rest_api_clients;
 
-import com.test.automation.rest_api_clients.BaseUriConstructor;
-import com.test.automation.rest_api_clients.HTTPHeaders;
 import com.test.automation.rest_api_clients.rest_assured.RequestSpecificationConverter;
-import io.restassured.RestAssured;
 import lombok.*;
 
 import java.text.MessageFormat;
 import java.util.Map;
 
-@SuppressWarnings("rawtypes")
 @Getter
 @Setter
 @NoArgsConstructor

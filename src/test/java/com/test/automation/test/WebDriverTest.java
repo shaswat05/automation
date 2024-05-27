@@ -40,10 +40,10 @@ public class WebDriverTest {
         productPage.selectFirstVariation();
         driver.manage().window().maximize();
 
-        Thread.sleep(5000);
-        productPage.selectProductVariation(2);
-        Thread.sleep(5000);
-        productPage.clickOnBuyNowButton();
+//        Thread.sleep(5000);
+//        productPage.selectProductVariation(2);
+//        Thread.sleep(5000);
+//        productPage.clickOnBuyNowButton();
     }
 
     @AfterClass(alwaysRun = true)

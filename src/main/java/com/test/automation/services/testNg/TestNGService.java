@@ -2,9 +2,12 @@ package com.test.automation.services.testNg;
 
 import com.test.automation.pojo.controller.RunTestXmlSuitePojo;
 import com.test.automation.pojo.testng.TestSuite;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.testng.TestNG;
 import org.testng.xml.XmlSuite;
@@ -14,34 +17,32 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Executor;
 
 @Service
 public class TestNGService {
 
-    private final Logger log = LogManager.getLogger(TestNGService.class.getName());
+    private final Logger log = LoggerFactory.getLogger(TestNGService.class.getName());
 
     @Value("${testng.xml.suite.location}")
     String xmlSuiteLocation;
 
-    public void runTestNgXML(TestSuite suite) {
-        TestNG testNG = new TestNG();
-        testNG.setXmlSuites(Collections.singletonList(suite.toTestNgXmlSuite()));
-        testNG.run();
+    @Async("AsyncExecutorToRunTest")
+    public void runTestNgXML(TestSuite suite, String testId) {
+        this.run(suite.toTestNgXmlSuite(), testId);
     }
 
-    public void runTestNgXML(RunTestXmlSuitePojo runTestXmlSuitePojo) {
+    @Async("AsyncExecutorToRunTest")
+    public void runTestNgXML(RunTestXmlSuitePojo runTestXmlSuitePojo, String testId) {
         XmlSuite suite = new XmlSuite();
-        String pathToXml = "./src/test/resources/testng_xml/" + runTestXmlSuitePojo.getFile();
-        log.debug("XmlSuite file path: " + pathToXml);
+        String pathToXml = xmlSuiteLocation + "/" + runTestXmlSuitePojo.getFile();
+        log.debug("XmlSuite file path: {}", pathToXml);
         suite.setSuiteFiles(Collections.singletonList(pathToXml));
-        TestNG testNG = new TestNG();
-        testNG.setXmlSuites(Collections.singletonList(suite));
-        testNG.run();
+        this.run(suite, testId);
     }
 
 
     public List<String> getAllXmlSuiteFiles() {
-//        String folderPath = "./src/test/resources/testng_xml";
         String folderPath = xmlSuiteLocation;
         log.info(xmlSuiteLocation);
         try {
@@ -63,5 +64,15 @@ public class TestNGService {
         }
         return xmlFiles;
     }
+
+    private void run(XmlSuite suite, String testId) {
+        String name = (suite.getName() != null) && (!suite.getName().isEmpty()) ? suite.getName() : "test";
+        System.setProperty("allure.results.directory", "allure-results/" + name + "_" + testId);
+        log.info("TestId: {}", testId);
+        TestNG testNG = new TestNG();
+        testNG.setXmlSuites(Collections.singletonList(suite));
+        testNG.run();
+    }
+
 
 }
