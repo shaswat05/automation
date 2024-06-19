@@ -1,69 +1,62 @@
 package com.test.automation.helpers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.test.automation.rest_api_clients.*;
-import com.test.automation.rest_api_clients.rest_assured.*;
-import io.restassured.response.Response;
+import com.test.automation.clients.rest_api_clients.RestApiClientFactory;
+import com.test.automation.pojo.rest_api_client.*;
+import com.test.automation.utils.JsonUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.test.automation.helpers.Constants.*;
-
 public class ReqResHelpers {
 
-    private final ObjectMapper mapper = new ObjectMapper();
-
-    public Response getListOfUsers(int page) {
+    public HTTPResponse getListOfUsers(Integer page) {
         HTTPQueryParams queryParams = new HTTPQueryParams();
-        queryParams.put("page", page);
-        RequestSpecification spec = RequestSpecificationConstructor.constructRequestSpecification(HOST, LIST_USERS_API, queryParams);
-        return HTTPMethodExecutor.get(spec);
+        queryParams.put("page", page.toString());
+        HTTPRequest.HTTPRequestBuilder builder = HTTPRequest.builder();
+        builder.queryParams(queryParams);
+        builder.serviceApi(ReqResServiceApis.LIST_USERS);
+        return RestApiClientFactory.getRestApiClient(builder.build()).execute();
     }
 
-    public Response getSingleUser(int id) {
+    public HTTPResponse getSingleUser(Integer id) {
         HTTPPathParams pathParams = new HTTPPathParams();
-        pathParams.put("id", id);
-        RequestSpecification spec = RequestSpecificationConstructor.constructRequestSpecification(HOST, SINGLE_USER_API, pathParams);
-        return HTTPMethodExecutor.get(spec);
+        pathParams.put("id", id.toString());
+        HTTPRequest.HTTPRequestBuilder builder = HTTPRequest.builder();
+        builder.pathParams(pathParams);
+        builder.serviceApi(ReqResServiceApis.SINGLE_USER);
+        return RestApiClientFactory.getRestApiClient(builder.build()).execute();
     }
 
-    public Response createUser(String name, String job) {
-        Map<String, String> bodyMap = new HashMap<>();
+    public HTTPResponse createUser(String name, String job) {
+        Map<String, Object> bodyMap = new HashMap<>();
         bodyMap.put("name", name);
         bodyMap.put("job", job);
-        String requestBodyAsString;
-        try {
-            requestBodyAsString = mapper.writeValueAsString(bodyMap);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-        RequestSpecification spec = RequestSpecificationConstructor.constructRequestSpecification(HOST, CREATE_USER_API, requestBodyAsString);
-        return HTTPMethodExecutor.post(spec);
+        HTTPRequest.HTTPRequestBuilder builder = HTTPRequest.builder();
+        builder.body(JsonUtils.mapToJson(bodyMap));
+        builder.serviceApi(ReqResServiceApis.CREATE_USER);
+        return RestApiClientFactory.getRestApiClient(builder.build()).execute();
     }
 
-    public Response updateUser(int id, String name, String job) {
-        Map<String, String> bodyMap = new HashMap<>();
+    public HTTPResponse updateUser(Integer id, String name, String job) {
+        Map<String, Object> bodyMap = new HashMap<>();
         bodyMap.put("name", name);
         bodyMap.put("job", job);
-        String requestBodyAsString;
-        try {
-            requestBodyAsString = mapper.writeValueAsString(bodyMap);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
         HTTPPathParams pathParams = new HTTPPathParams();
-        pathParams.put("id", id);
-        RequestSpecification spec = RequestSpecificationConstructor.constructRequestSpecification(HOST, UPDATE_USER_API, requestBodyAsString, new HTTPHeaders(), pathParams);
-        return HTTPMethodExecutor.put(spec);
+        pathParams.put("id", id.toString());
+        HTTPRequest.HTTPRequestBuilder builder = HTTPRequest.builder();
+        builder.body(JsonUtils.mapToJson(bodyMap));
+        builder.serviceApi(ReqResServiceApis.UPDATE_USER);
+        builder.pathParams(pathParams);
+        return RestApiClientFactory.getRestApiClient(builder.build()).execute();
     }
 
-    public Response deleteUser(int id) {
+    public HTTPResponse deleteUser(Integer id) {
         HTTPPathParams pathParams = new HTTPPathParams();
-        pathParams.put("id", id);
-        RequestSpecification spec = RequestSpecificationConstructor.constructRequestSpecification(HOST, DELETE_USER_API, pathParams);
-        return HTTPMethodExecutor.delete(spec);
+        pathParams.put("id", id.toString());
+        HTTPRequest.HTTPRequestBuilder builder = HTTPRequest.builder();
+        builder.serviceApi(ReqResServiceApis.DELETE_USER);
+        builder.pathParams(pathParams);
+        return RestApiClientFactory.getRestApiClient(builder.build()).execute();
     }
 
 }

@@ -1,4 +1,4 @@
-package com.test.automation.rest_api_clients;
+package com.test.automation.pojo.rest_api_client;
 
 public enum HTTPMethod {
     GET,
