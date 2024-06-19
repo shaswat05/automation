@@ -3,15 +3,7 @@
 <suite name="Rest API Test Suite" parallel="methods" thread-count="5">
     <test name="Rest Assured" verbose="2" preserve-order="true">
         <classes>
-            <class name="com.test.automation.test.RATest">
-                <methods>
-                    <include name="listUsersTest"/>
-                    <include name="getSingleUserTest"/>
-                    <include name="createUserTest"/>
-                    <include name="updateUserTest"/>
-                    <include name="deleteUserTest"/>
-                </methods>
-            </class>
+            <class name="com.test.automation.test.RestAssuredTest" />
         </classes>
     </test>
 </suite>

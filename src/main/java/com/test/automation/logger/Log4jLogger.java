@@ -1,21 +1,18 @@
 package com.test.automation.logger;
 
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.testng.annotations.Test;
 
-public class Log4jLogger {
+class Log4jLogger implements ILogger {
 
-    Logger logger = LogManager.getLogger();
-    Logger logger2 = LogManager.getLogger(this.getClass());
+    private final Logger logger;
 
-    @Test
-    public void f() {
-        logger.log(Level.INFO, "Hello world!");
-        logger2.log(Level.INFO, "Hello world!");
+    Log4jLogger(String name) {
+        logger = LogManager.getLogger(name);
     }
 
-
-
+    @Override
+    public void log(String message) {
+        logger.info(message);
+    }
 }
