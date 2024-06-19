@@ -1,8 +1,5 @@
 package com.test.automation.kafka;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-
 public abstract class AbstractSimpleKafka {
 
     public AbstractSimpleKafka() {
@@ -18,8 +15,6 @@ public abstract class AbstractSimpleKafka {
             }
         });
     }
-
-    private final Logger log = LogManager.getLogger(AbstractSimpleKafka.class.getName());
 
     public abstract void shutdown() throws Exception;
 

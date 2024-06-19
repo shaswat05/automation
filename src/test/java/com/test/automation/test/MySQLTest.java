@@ -1,8 +1,8 @@
 package com.test.automation.test;
 
 import com.test.automation.allure.AllureReportUtils;
-import com.test.automation.mysql.MySQLHelper;
-import com.test.automation.mysql.MySQLHelperImpl;
+import com.test.automation.mysql.IMySQL;
+import com.test.automation.mysql.MySQLFactory;
 import org.testng.annotations.Test;
 
 /**
@@ -10,18 +10,18 @@ import org.testng.annotations.Test;
  */
 public class MySQLTest {
 
-    private final MySQLHelper mySQLHelper = new MySQLHelperImpl();
+    private final IMySQL mysql = MySQLFactory.getMySQL();
 
     @Test
     public void f() {
         AllureReportUtils.updateTestMethodNameAndDescription("MySQL test with AllureReportUtils");
-        mySQLHelper.select("SELECT * FROM user");
-        mySQLHelper.execute("DELETE FROM user WHERE name='Alok'");
-        mySQLHelper.select("SELECT * FROM user");
-        mySQLHelper.execute("INSERT INTO user (name, password) VALUES ('Alok', 'Kumar')");
-        mySQLHelper.select("SELECT * FROM user");
-        mySQLHelper.execute("DELETE FROM user WHERE name='Alok'");
-        mySQLHelper.execute("ALTER TABLE user AUTO_INCREMENT = 2;");
-        mySQLHelper.select("SELECT * FROM user");
+        mysql.select("SELECT * FROM user");
+        mysql.execute("DELETE FROM user WHERE name='Alok'");
+        mysql.select("SELECT * FROM user");
+        mysql.execute("INSERT INTO user (name, password) VALUES ('Alok', 'Kumar')");
+        mysql.select("SELECT * FROM user");
+        mysql.execute("DELETE FROM user WHERE name='Alok'");
+        mysql.execute("ALTER TABLE user AUTO_INCREMENT = 2;");
+        mysql.select("SELECT * FROM user");
     }
 }
