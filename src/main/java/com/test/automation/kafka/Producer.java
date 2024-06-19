@@ -1,11 +1,10 @@
 package com.test.automation.kafka;
 
+import com.test.automation.utils.PropertiesLoader;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 
 import java.util.Properties;
 import java.util.UUID;
@@ -20,8 +19,6 @@ public class Producer extends AbstractSimpleKafka {
 
     private KafkaProducer<String, String> kafkaProducer;
     private final AtomicBoolean closed = new AtomicBoolean(false);
-
-    private final Logger log = LogManager.getLogger(Producer.class.getName());
 
     @Getter
     @Setter
@@ -105,7 +102,7 @@ public class Producer extends AbstractSimpleKafka {
 
     private KafkaProducer<String, String> getKafkaProducer() throws Exception {
         if (this.kafkaProducer == null) {
-            Properties props = PropertiesHelper.getProperties();
+            Properties props = PropertiesLoader.getProperties("kafka.properties");
             this.kafkaProducer = new KafkaProducer<>(props);
         }
         return this.kafkaProducer;

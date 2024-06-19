@@ -1,18 +1,17 @@
 package com.test.automation.mysql;
 
 import com.test.automation.allure.AllureReportUtils;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import com.test.automation.exceptions.SQLRuntimeException;
+import com.test.automation.logger.ILogger;
+import com.test.automation.logger.LoggerFactory;
+import com.test.automation.utils.PropertiesLoader;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class MySQLHelperImpl implements MySQLHelper {
+class MySQLJava implements IMySQL {
 
-    private final Logger log = LogManager.getLogger(MySQLHelperImpl.class.getName());
+    private final ILogger logger = LoggerFactory.getLogger(MySQLJava.class.getSimpleName());
 
     /**
      * This method is used to execute SELECT query only.
@@ -60,10 +59,11 @@ public class MySQLHelperImpl implements MySQLHelper {
     }
 
     private Connection createConnection() throws SQLException {
-        String url = "jdbc:mysql://localhost/automation";
-        String driverClassName = "com.mysql.cj.jdbc.Driver";
-        String user = "root";
-        String password = "root";
+        Properties properties = PropertiesLoader.getProperties("mysql.properties");
+        String url = properties.getProperty("mysql.db.host");
+        String driverClassName = properties.getProperty("mysql.db.driver.class.name");
+        String user = properties.getProperty("mysql.db.user");
+        String password = properties.getProperty("mysql.db.password");
         return createConnection(driverClassName, url, user, password);
     }
 
@@ -81,13 +81,13 @@ public class MySQLHelperImpl implements MySQLHelper {
     }
 
     private List<Map<String, Object>> map(ResultSet rs) throws SQLException {
-        List<Map<String, Object>> results = new ArrayList<Map<String, Object>>();
+        List<Map<String, Object>> results = new ArrayList<>();
         try {
             if (rs != null) {
                 ResultSetMetaData meta = rs.getMetaData();
                 int numColumns = meta.getColumnCount();
                 while (rs.next()) {
-                    Map<String, Object> row = new HashMap<String, Object>();
+                    Map<String, Object> row = new HashMap<>();
                     for (int i = 1; i <= numColumns; ++i) {
                         String name = meta.getColumnName(i);
                         Object value = rs.getObject(i);
@@ -104,7 +104,7 @@ public class MySQLHelperImpl implements MySQLHelper {
 
     private void log(Object sql, Object logTag) {
         String lt = "[MySQL][" + "dbName:automation" + "]" + logTag + " ";
-        log.info(lt + sql);
+        logger.log(lt + sql);
         AllureReportUtils.addAttachment(lt, sql.toString());
     }
 

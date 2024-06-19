@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="WebDriver Test Suite" parallel="methods" thread-count="5">
+    <test name="WebDriver Test" verbose="2" preserve-order="true">
+        <classes>
+            <class name="com.test.automation.test.WebDriverTest"/>
+        </classes>
+    </test>
+</suite>

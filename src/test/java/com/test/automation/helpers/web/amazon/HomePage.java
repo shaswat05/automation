@@ -1,17 +1,18 @@
 package com.test.automation.helpers.web.amazon;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import com.test.automation.logger.ILogger;
+import com.test.automation.logger.LoggerFactory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 public class HomePage {
 
     private final WebDriver driver;
-    private final Logger log = LogManager.getLogger(HomePage.class);
+    private final ILogger logger;
 
     public HomePage(WebDriver driver) {
-        log.info("Initializing home page.");
+        logger = LoggerFactory.getLogger(HomePage.class.getSimpleName());
+        logger.log("Initializing home page.");
         this.driver = driver;
     }
 
@@ -20,7 +21,7 @@ public class HomePage {
     private final By searchButton = By.id("nav-search-submit-button");
 
     public void accountsAndListsLink() {
-        log.info("Click on 'Account & Lists'.");
+        logger.log("Click on 'Account & Lists'.");
         driver.findElement(accountAndLists).click();
     }
 

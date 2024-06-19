@@ -3,7 +3,7 @@ package com.test.automation.mysql;
 import java.util.List;
 import java.util.Map;
 
-public interface MySQLHelper {
+public interface IMySQL {
 
     /**
      * This method is used to execute SELECT query only.

@@ -1,9 +1,11 @@
 package com.test.automation.services.testNg;
 
+import com.test.automation.listeners.AllureReportListener;
 import com.test.automation.logger.ILogger;
 import com.test.automation.logger.LoggerFactory;
 import com.test.automation.pojo.controller.RunTestXmlSuitePojo;
 import com.test.automation.pojo.testng.TestSuite;
+import com.test.automation.utils.JsonUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class TestNGService {
@@ -34,7 +37,10 @@ public class TestNGService {
         XmlSuite suite = new XmlSuite();
         String pathToXml = xmlSuiteLocation + "/" + runTestXmlSuitePojo.getFile();
         logger.log("XmlSuite file path: " + pathToXml);
+        String file = runTestXmlSuitePojo.getFile();
+        suite.setName(file.substring(file.lastIndexOf('/') + 1, file.lastIndexOf('.')));
         suite.setSuiteFiles(Collections.singletonList(pathToXml));
+        logger.log("XmlSuite file path: " + suite.getName());
         this.run(suite, testId);
     }
 
@@ -64,10 +70,17 @@ public class TestNGService {
 
     private void run(XmlSuite suite, String testId) {
         String name = (suite.getName() != null) && (!suite.getName().isEmpty()) ? suite.getName() : "test";
-        System.setProperty("allure.results.directory", "allure-results/" + name + "_" + testId);
+        String reportDir = "reports/" + name + "_" + testId;
+        System.setProperty("allure.results.directory", reportDir + "/allure-results");
+        logger.log("suite: " + JsonUtils.pojoToJsonString(suite));
         logger.log("TestId: " + testId);
         TestNG testNG = new TestNG();
+        Map<String, String> param = suite.getParameters();
+        param.put("reportDirectory", reportDir);
+        param.put("testId", testId);
+        suite.setParameters(param);
         testNG.setXmlSuites(Collections.singletonList(suite));
+        testNG.addListener(new AllureReportListener());
         testNG.run();
     }
 

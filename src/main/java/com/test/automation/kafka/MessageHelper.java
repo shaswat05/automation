@@ -1,5 +1,6 @@
 package com.test.automation.kafka;
 
+import com.test.automation.utils.PropertiesLoader;
 import org.json.simple.JSONObject;
 
 import java.util.Properties;
@@ -63,8 +64,8 @@ public class MessageHelper {
      * @throws Exception the exception
      */
     protected static Properties getProperties() throws Exception {
-        if (props == null){
-            props = PropertiesHelper.getProperties();
+        if (props == null) {
+            props = PropertiesLoader.getProperties("kafka.properties");
         }
 
         return props;

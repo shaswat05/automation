@@ -1,7 +1,7 @@
 package com.test.automation.helpers.web.amazon;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import com.test.automation.logger.ILogger;
+import com.test.automation.logger.LoggerFactory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
@@ -9,10 +9,11 @@ public class SignInPage {
 
     private final WebDriver driver;
 
-    private final Logger log = LogManager.getLogger(SignInPage.class);
+    private final ILogger logger;
 
     public SignInPage(WebDriver driver) {
-        log.info("Initializing Sign In page.");
+        logger = LoggerFactory.getLogger(SignInPage.class.getSimpleName());
+        logger.log("Initializing Sign In page.");
         this.driver = driver;
     }
 
@@ -23,7 +24,7 @@ public class SignInPage {
     private final By signInSubmitButton = By.id("signInSubmit");
 
     public void enterEmailOrMobileNumber(String emailOrMobileNumber) {
-        log.info("Enter email or mobile number: " + emailOrMobileNumber);
+        logger.log("Enter email or mobile number: " + emailOrMobileNumber);
         driver.findElement(this.emailOrMobileNumber).sendKeys(emailOrMobileNumber);
     }
 
@@ -32,7 +33,7 @@ public class SignInPage {
     }
 
     public void enterPassword(String password) {
-        log.info("Enter password: " + emailOrMobileNumber);
+        logger.log("Enter password: " + emailOrMobileNumber);
         driver.findElement(this.password).sendKeys(password);
     }
 

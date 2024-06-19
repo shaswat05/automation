@@ -20,7 +20,11 @@ import java.util.concurrent.ExecutionException;
 @RestController
 public class TestController {
 
-    private final ILogger logger = LoggerFactory.getLogger(TestController.class.getName());
+    private final ILogger logger;
+
+    public TestController() {
+        logger = LoggerFactory.getLogger(TestController.class.getName());
+    }
 
     @Autowired
     TestNGService service;

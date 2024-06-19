@@ -12,7 +12,11 @@ import java.util.concurrent.Executor;
 @Configuration
 public class TestNGThreadConfig {
 
-    private final ILogger logger = LoggerFactory.getLogger(TestNGThreadConfig.class.getName());
+    private final ILogger logger;
+
+    public TestNGThreadConfig() {
+        logger = LoggerFactory.getLogger(TestNGThreadConfig.class.getName());
+    }
 
     @Value("${async.executor.to.run.test.core.pool.size}")
     Integer corePoolSize;
