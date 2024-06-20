@@ -8,10 +8,7 @@ import com.test.automation.services.testNg.TestNGService;
 import com.test.automation.utils.JsonUtils;
 import com.test.automation.utils.RandomNumberGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -44,7 +41,7 @@ public class TestController {
         logger.log("Request received: " + JsonUtils.pojoToJsonString(runTestXmlSuitePojo));
         String testId = RandomNumberGenerator.getTestId();
         service.runTestNgXML(runTestXmlSuitePojo, testId);
-        String response = JsonUtils.mapToJson(Map.of("test_id", testId, "status", "success"));
+        String response = JsonUtils.mapToJson(Map.of("test_id", testId, "status", "success", "report_link", "http://localhost:8080/report/" + testId));
         logger.log("Response: " + response);
         return response;
     }
@@ -56,6 +53,11 @@ public class TestController {
         Map<String, List<String>> responseMap = Map.of("xml_files", suiteFiles);
         logger.log("Response to get all the xml suites path: " + responseMap);
         return responseMap;
+    }
+
+    @GetMapping ("/report/{testId}")
+    public String getReport(@PathVariable Long testId) throws Exception {
+        return service.getReport(testId.toString());
     }
 
 }
