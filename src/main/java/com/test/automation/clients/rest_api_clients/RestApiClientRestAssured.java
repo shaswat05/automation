@@ -1,5 +1,8 @@
 package com.test.automation.clients.rest_api_clients;
 
+import com.test.automation.allure.AllureReportUtils;
+import com.test.automation.logger.ILogger;
+import com.test.automation.logger.LoggerFactory;
 import com.test.automation.pojo.rest_api_client.HTTPRequest;
 import com.test.automation.pojo.rest_api_client.HTTPResponse;
 import io.restassured.RestAssured;
@@ -8,8 +11,13 @@ import io.restassured.specification.RequestSpecification;
 
 class RestApiClientRestAssured extends RestApiClient {
 
+    private final ILogger logger;
+
     RestApiClientRestAssured(HTTPRequest httpRequest) {
         this.httpRequest = httpRequest;
+        this.logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
+        logger.log(httpRequest.getCurl(false));
+        AllureReportUtils.addCurl(httpRequest);
     }
 
     @Override
@@ -51,6 +59,8 @@ class RestApiClientRestAssured extends RestApiClient {
         builder.statusCode(response.getStatusCode());
         builder.bodyAsString(response.print());
         HTTPResponse httpResponse = builder.build();
+        logger.log(httpResponse.getStatusCode() + ": " + httpResponse.getBodyAsString());
+        AllureReportUtils.addHTTPResponse(httpRequest, httpResponse);
         return httpResponse;
     }
 }

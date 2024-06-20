@@ -12,12 +12,13 @@ import org.springframework.stereotype.Service;
 import org.testng.TestNG;
 import org.testng.xml.XmlSuite;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class TestNGService {
@@ -37,8 +38,7 @@ public class TestNGService {
         XmlSuite suite = new XmlSuite();
         String pathToXml = xmlSuiteLocation + "/" + runTestXmlSuitePojo.getFile();
         logger.log("XmlSuite file path: " + pathToXml);
-        String file = runTestXmlSuitePojo.getFile();
-        suite.setName(file.substring(file.lastIndexOf('/') + 1, file.lastIndexOf('.')));
+        suite.setName(getReportDir(runTestXmlSuitePojo.getFile()));
         suite.setSuiteFiles(Collections.singletonList(pathToXml));
         logger.log("XmlSuite file path: " + suite.getName());
         this.run(suite, testId);
@@ -69,20 +69,35 @@ public class TestNGService {
     }
 
     private void run(XmlSuite suite, String testId) {
-        String name = (suite.getName() != null) && (!suite.getName().isEmpty()) ? suite.getName() : "test";
-        String reportDir = "reports/" + name + "_" + testId;
+        String reportDir = getReportDir(testId);
         System.setProperty("allure.results.directory", reportDir + "/allure-results");
         logger.log("suite: " + JsonUtils.pojoToJsonString(suite));
         logger.log("TestId: " + testId);
         TestNG testNG = new TestNG();
-        Map<String, String> param = suite.getParameters();
-        param.put("reportDirectory", reportDir);
-        param.put("testId", testId);
-        suite.setParameters(param);
         testNG.setXmlSuites(Collections.singletonList(suite));
-        testNG.addListener(new AllureReportListener());
+        testNG.addListener(new AllureReportListener(testId, reportDir));
         testNG.run();
     }
 
+    private String getReportDir(String testId) {
+        return "reports/" + "test" + "_" + testId;
+    }
+
+    public String getReportLink(String testId) {
+        return System.getProperty("user.dir") + '/' + getReportDir(testId) + "/allure-report/index.html";
+    }
+
+    public String getReport(String testId) throws Exception {
+        String uri = getReportLink(testId);
+        File file = new File(uri);
+        file.setReadable(true);
+        StringBuilder html = new StringBuilder();
+        FileReader fileReader = new FileReader(file);
+        BufferedReader br = new BufferedReader(fileReader);
+        String val;
+        while ((val = br.readLine()) != null) html.append(val);
+        br.close();
+        return html.toString();
+    }
 
 }
